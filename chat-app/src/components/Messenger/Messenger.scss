@@ -1,0 +1,115 @@
+.Messenger {
+    display: flex;
+    flex-direction: column;
+    // justify-content: start !important;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    height: 90vh;
+    margin-left: 15px;
+
+    .chat {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .chat__header {
+        background-color: #000000;
+        padding: 10px;
+    }
+
+    .chat__headerInfo {
+        display: flex;
+        align-items: center;
+    }
+
+    .chat__avatar img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .chat__name {
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .action-icon {
+        margin-left: auto;
+
+        .icon-call {
+            margin-right: 10px;
+            color: aqua;
+
+            &:hover {
+                color: #fff;
+            }
+        }
+    }
+
+    .action-icon span {
+        margin: 0 5px;
+        color: #fff;
+    }
+
+    .chat__body {
+        flex: 1;
+        background-color: #000000;
+        padding: 10px;
+        overflow-y: auto;
+    }
+
+    .avatar {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 10px;
+    }
+
+    .avatar img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .content {
+        background-color: #ffffff;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .chat__footer {
+        background-color: #000000;
+        padding: 10px;
+    }
+
+    .chat__footer form {
+        display: flex;
+        align-items: center;
+    }
+
+    .chat__footer input[type='text'] {
+        flex: 1;
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+    }
+
+    .chat__footer button {
+        margin-left: 10px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .chat__footer button:hover {
+        background-color: #0056b3;
+    }
+}

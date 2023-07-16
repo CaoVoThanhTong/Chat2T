@@ -1,0 +1,41 @@
+.Header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+}
+
+.Container {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.Navbar {
+    width: 15%;
+}
+
+.Home {
+    width: 50%;
+    overflow-x: scroll;
+    height: 700px;
+}
+.Home::-webkit-scrollbar {
+    width: 0;
+}
+.Contact {
+    width: 20%;
+}
+
+.Footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+}

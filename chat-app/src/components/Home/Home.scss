@@ -1,0 +1,133 @@
+.post {
+    width: 100%;
+    margin: 30px 0;
+    border-radius: 10px;
+    -webkit-box-shadow: 2px 4px 10px 1px rgba(255, 255, 255, 0.7);
+    box-shadow: 2px 4px 10px 1px rgba(255, 255, 255, 0.9);
+
+    .postWrapper {
+        padding: 20px;
+        background-color: #121111;
+        .postTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .postTopLeft {
+                display: flex;
+                align-items: center;
+
+                .postProfileImg {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    cursor: pointer;
+                }
+
+                .postUsername {
+                    font-size: 15px;
+                    font-weight: 500;
+                    margin: 0 10px;
+                    cursor: pointer;
+                    color: white; // Màu chữ trắng
+                }
+
+                .postDate {
+                    font-size: 14px;
+                    color: white; // Màu chữ trắng
+                }
+            }
+
+            .postTopRight {
+                .postVertButton {
+                    font-size: 30px;
+                    color: #ccc;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .postCenter {
+            margin: 20px 0;
+
+            .postText {
+                color: white; // Màu chữ trắng
+            }
+
+            .postImg {
+                width: 100%;
+                max-height: 500px;
+                object-fit: contain;
+                margin-top: 20px;
+                cursor: pointer;
+            }
+        }
+
+        .postBottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .postBottomLeft {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .bottomLeftIcon {
+                    font-size: 30px;
+                    cursor: pointer;
+                }
+
+                .postLikeCounter {
+                    font-size: 15px;
+                    color: white; // Màu chữ trắng
+                }
+            }
+
+            .postBottomRight {
+                .postCommentText {
+                    font-size: 15px;
+                    cursor: pointer;
+                    color: white; // Màu chữ trắng
+                }
+            }
+        }
+
+        .footerHr {
+            margin: 10px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+
+        .postBottomFooter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .postBottomFooterItem {
+                display: flex;
+                align-items: center;
+                padding: 7px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: 0.5s;
+
+                .footerIcon {
+                    color: #ccc;
+                    font-size: 30px;
+                    margin-right: 10px;
+                }
+
+                .footerText {
+                    font-weight: 500;
+                    color: white; // Màu chữ trắng
+                }
+            }
+        }
+
+        .postBottomFooterItem:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+    }
+}
