@@ -1,5 +1,6 @@
 .post {
     width: 100%;
+
     margin: 30px 0;
     border-radius: 10px;
     -webkit-box-shadow: 2px 4px 10px 1px rgba(255, 255, 255, 0.7);
@@ -30,12 +31,12 @@
                     font-weight: 500;
                     margin: 0 10px;
                     cursor: pointer;
-                    color: white; // Màu chữ trắng
+                    color: white;
                 }
 
                 .postDate {
                     font-size: 14px;
-                    color: white; // Màu chữ trắng
+                    color: white;
                 }
             }
 
@@ -52,12 +53,12 @@
             margin: 20px 0;
 
             .postText {
-                color: white; // Màu chữ trắng
+                color: white;
             }
 
             .postImg {
                 width: 100%;
-                max-height: 500px;
+                max-height: 400px;
                 object-fit: contain;
                 margin-top: 20px;
                 cursor: pointer;
@@ -81,7 +82,7 @@
 
                 .postLikeCounter {
                     font-size: 15px;
-                    color: white; // Màu chữ trắng
+                    color: white;
                 }
             }
 
@@ -89,7 +90,7 @@
                 .postCommentText {
                     font-size: 15px;
                     cursor: pointer;
-                    color: white; // Màu chữ trắng
+                    color: white;
                 }
             }
         }
@@ -121,7 +122,7 @@
 
                 .footerText {
                     font-weight: 500;
-                    color: white; // Màu chữ trắng
+                    color: white;
                 }
             }
         }

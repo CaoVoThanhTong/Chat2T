@@ -1,64 +1,128 @@
-import React from 'react';
-import Header from '../Header';
-import Navbar from '../Navbar';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Messenger.scss';
 import tong from '../../image/thanhtong.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhone, faVideo, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faPhone, faVideo, faEllipsisV, faSearch, faPlane } from '@fortawesome/free-solid-svg-icons';
+import io from 'socket.io-client';
+import moment from 'moment';
 
-function Layout() {
+function Messenger() {
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState([]);
+    const [socket, setSocket] = useState(null);
+
+    useEffect(() => {
+        const newSocket = io('http://localhost:5000'); // Thay đổi với URL của máy chủ Socket.io của bạn
+        setSocket(newSocket);
+
+        return () => {
+            newSocket.disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('receiveMessage', (message) => {
+                setMessages((prevMessages) => [...prevMessages, message]);
+            });
+        }
+    }, [socket]);
+
+    const handleMessageChange = (event) => {
+        setMessage(event.target.value);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (message.trim() !== '') {
+            const newMessage = {
+                text: message,
+                timestamp: Date.now(), // Lưu thời gian gửi tin nhắn
+            };
+            socket.emit('sendMessage', newMessage);
+            setMessage('');
+        }
+    };
+
     return (
-        <div className="wrapper">
-            <div className="Header">
-                <Header />
-            </div>
-            <div className="Container">
-                <div className="Navbar">
-                    <Navbar />
+        <div className="containerr">
+            <div className="search-user">
+                <div className="search-user-logo">
+                    <Link to="/layout">
+                        <img src="" alt="Logo" />
+                    </Link>
                 </div>
-                <div className="Messenger">
-                    <div className="chat">
-                        <div className="chat__header">
-                            <div className="chat__headerInfo">
-                                <div className="chat__avatar">
-                                    <img src={tong} alt="" />
-                                    <span className="chat__name">Nguyễn Văn A</span>
-                                </div>
-                                <div className="action-icon">
-                                    <span className="icon-call">
-                                        <FontAwesomeIcon icon={faPhone} style={{ fontSize: '18' }} />
-                                    </span>
-                                    <span className="icon-call">
-                                        <FontAwesomeIcon icon={faVideo} style={{ fontSize: '18' }} />
-                                    </span>
-                                    <span className="icon-call">
-                                        <FontAwesomeIcon icon={faEllipsisV} style={{ fontSize: '18' }} />
-                                    </span>
-                                </div>
-                            </div>
+                <div className="search-user-input">
+                    <input type="text" placeholder="Tìm bạn của bạn" />
+                    <FontAwesomeIcon className="search-chat" icon={faSearch} />
+                </div>
+                <div className="list-user-list">
+                    <div className="list-user-item">
+                        <div className="list-user-item-avata">
+                            <img src={tong} alt="avatars" />
                         </div>
-                        <div className="chat__body">
-                            <div className="avatar">
-                                <img src={tong} alt="" />
-                                <div className="content">
-                                    <p>hello</p>
-                                </div>
-                            </div>
+                        <div className="list-user-item-name">Thien Tri</div>
+                    </div>
+                    <div className="list-user-item">
+                        <div className="list-user-item-avata">
+                            <img src={tong} alt="avatars" />
                         </div>
-                        <div className="chat__footer">
-                            <form>
-                                <input type="text" placeholder="Type a message" />
-                                <button type="submit">Send a message</button>
-                            </form>
+                        <div className="list-user-item-name">Thien Tri</div>
+                    </div>
+                    <div className="list-user-item">
+                        <div className="list-user-item-avata">
+                            <img src={tong} alt="avatars" />
+                        </div>
+                        <div className="list-user-item-name">Thien Tri</div>
+                    </div>
+                </div>
+            </div>
+            <div className="chat">
+                <div className="chat-header">
+                    <div className="chat-header-user">
+                        <div className="chat-header-user-avatar">
+                            <img src={tong} alt="avatars" />
+                        </div>
+                        <div className="chat-header-user-name">Trần Lê Thiên Trí</div>
+                        <div className="chat-header-user-action">
+                            <FontAwesomeIcon className="icon-chat" icon={faPhone} />
+                            <FontAwesomeIcon className="icon-chat" icon={faVideo} />
+                            <FontAwesomeIcon className="icon-chat" icon={faEllipsisV} />
                         </div>
                     </div>
                 </div>
-                {/* <div className="Contact">
-                    <Contact />
-                </div> */}
+                <div className="chat-body">
+                    <div className="chat-body-message">
+                        {messages.map((msg, index) => (
+                            <div
+                                className={`chat-body-message-item ${msg.isMyMessage ? 'my-message' : ''}`}
+                                key={index}
+                            >
+                                <div className="chat-body-message-item-message">{msg.text}</div>
+                                <div className="chat-body-message-item-time">
+                                    {moment(msg.timestamp).format('HH:mm')}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="chat-footer">
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            value={message}
+                            onChange={handleMessageChange}
+                            placeholder="Nhập tin nhắn..."
+                        />
+                        <button type="submit">
+                            <FontAwesomeIcon icon={faPlane} />
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     );
 }
 
-export default Layout;
+export default Messenger;

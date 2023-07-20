@@ -11,6 +11,7 @@ const Register = () => {
     const [againpassword, setagainPassword] = useState('');
     const navigate = useNavigate();
 
+    //chặn điều hướng trái phép vào bên trong
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {

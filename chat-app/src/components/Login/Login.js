@@ -5,8 +5,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { auth, provider } from '../../Firebase/Firebaseconfig';
 import './Login.scss';
+import logo from '../../image/logopng.png';
 
-const Login = () => {
+const Login = ({ setAuthenticated }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -31,6 +32,7 @@ const Login = () => {
             .then((result) => {
                 localStorage.setItem('token', 'your_token_here');
                 toast.success('Đăng nhập thành công');
+                setAuthenticated(true);
                 navigate('/layout');
             })
             .catch((error) => {
@@ -56,6 +58,7 @@ const Login = () => {
 
         if (isLoggedIn) {
             localStorage.setItem('token', 'your_token_here');
+            setAuthenticated(true);
             toast.success('Đăng nhập thành công');
             navigate('/layout'); // Chuyển hướng đến trang Layout sau khi đăng nhập thành công
         } else {
@@ -68,7 +71,7 @@ const Login = () => {
             <main className="l-main">
                 <div className="l-user">
                     <div className="c-panel group">
-                        <img className="c-panel__img" src="" alt="Logo-TwoT" />
+                        <img className="c-panel__img" src={logo} alt="Logo-TwoT" />
 
                         <div className="c-panel__form">
                             <input

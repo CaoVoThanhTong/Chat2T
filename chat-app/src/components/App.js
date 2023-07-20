@@ -8,6 +8,7 @@ import Register from './Register';
 import Layout from './Layout/layout';
 import Navbar from './Navbar';
 import Contact from './Contact';
+import Profile from '~/Profile';
 
 const App = () => {
     const [authenticated, setAuthenticated] = useState(false);
@@ -32,6 +33,7 @@ const App = () => {
                         <Route path="/layout" element={<Layout />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/messenger" element={<Messenger />} />
+                        <Route path="/profile" element={<Profile />} />
                         <Route path="/header" element={<Header />} />
                         <Route path="/navbar" element={<Navbar />} />
                     </>
@@ -39,7 +41,6 @@ const App = () => {
                     <Route path="*" element={<Navigate to="/login" replace />} />
                 )}
             </Routes>
-            y
         </Router>
     );
 };
