@@ -35,7 +35,7 @@ function Profile() {
             <div className="info__left">
                 <div className="logo__info">
                     <Link to="/layout">
-                        <img src={logo} alt="Logo" />
+                        <img src="" alt="Logo" />
                     </Link>
                 </div>
                 <Navbar />

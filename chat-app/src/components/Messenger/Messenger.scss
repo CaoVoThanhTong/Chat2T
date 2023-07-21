@@ -46,6 +46,10 @@
     margin-left: 8px;
     color: gray;
     cursor: pointer;
+
+    &:hover {
+        color: #ffffff;
+    }
 }
 
 .list-user-list {
@@ -58,6 +62,11 @@
     align-items: center;
     padding: 8px;
     cursor: pointer;
+
+    &:hover {
+        background-color: #292929;
+        border-radius: 10px;
+    }
 }
 
 .list-user-item-avata img {
@@ -114,6 +123,10 @@
     margin-left: 8px;
     color: gray;
     cursor: pointer;
+
+    &:hover {
+        color: #ffffff;
+    }
 }
 
 .chat-body {
@@ -187,7 +200,7 @@
 }
 
 .other-message .chat-body-message-item {
-    justify-content: flex-end; /* Hiển thị tin nhắn của người khác bên trái */
+    justify-content: flex-start; /* Hiển thị tin nhắn của người khác bên trái */
 }
 
 .chat-body-message-item-message {

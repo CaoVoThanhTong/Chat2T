@@ -54,7 +54,7 @@ function Messenger() {
                     </Link>
                 </div>
                 <div className="search-user-input">
-                    <input type="text" placeholder="Tìm bạn của bạn" />
+                    <input type="text" placeholder="find your friend" />
                     <FontAwesomeIcon className="search-chat" icon={faSearch} />
                 </div>
                 <div className="list-user-list">
@@ -113,7 +113,7 @@ function Messenger() {
                             type="text"
                             value={message}
                             onChange={handleMessageChange}
-                            placeholder="Nhập tin nhắn..."
+                            placeholder="Type a message..."
                         />
                         <button type="submit">
                             <FontAwesomeIcon icon={faPlane} />

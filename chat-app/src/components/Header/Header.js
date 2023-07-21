@@ -11,7 +11,7 @@ import user from '../../image/thanhtong.jpg';
 
 import './header.scss';
 
-const Navbar = () => {
+const Header = () => {
     return (
         <div className="navbarContainer">
             <div className="navbarLeft">
@@ -40,7 +40,7 @@ const Navbar = () => {
                     <Link to="/Messenger">
                         <div className="navbarIconItem">
                             <ChatBubbleIcon style={{ color: 'fff' }} />
-                            {/* <span className="navbarIconBadge">10</span> */}
+                            <span className="navbarIconBadge">10</span>
                         </div>
                     </Link>
                     <div className="navbarIconItem">
@@ -56,4 +56,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar;
+export default Header;

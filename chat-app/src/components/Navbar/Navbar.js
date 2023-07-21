@@ -33,7 +33,7 @@ const Navbar = () => {
                         <FontAwesomeIcon icon={faHome} />
                         <div className="content">Home</div>
                     </Link>
-                    <Link className="icon" to="/layout">
+                    <Link className="icon" to="/profile">
                         <FontAwesomeIcon icon={faUser} />
                         <div className="content">Profile</div>
                     </Link>
