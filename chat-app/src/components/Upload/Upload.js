@@ -35,7 +35,7 @@ const Upload = () => {
                         </div>
                     </div>
                     <div className="right">
-                        <button>Share</button>
+                        <button>Post</button>
                     </div>
                 </div>
             </div>

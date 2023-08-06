@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
+import logo from '../../image/logo.png';
 import 'react-toastify/dist/ReactToastify.css';
 import './Register.scss';
 
@@ -9,9 +11,12 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [againpassword, setagainPassword] = useState('');
+    const [showVerification, setShowVerification] = useState(false);
+    const [verificationCode, setVerificationCode] = useState('');
+    const [verificationError, setVerificationError] = useState('');
     const navigate = useNavigate();
 
-    //chặn điều hướng trái phép vào bên trong
+    // Chặn điều hướng trái phép vào bên trong
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -35,18 +40,51 @@ const Register = () => {
         setagainPassword(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('Name:', name);
-        console.log('Email:', email);
-        console.log('Password:', password);
+        // console.log('Name:', name);
+        // console.log('Email:', email);
+        // console.log('Password:', password);
 
-        // Perform registration logic here
-        // Call API, save registration information, etc.
+        try {
+            const response = await axios.post('http://localhost:3000/auth/register', {
+                email: email,
+                hashPassword: password,
+                userName: name,
+            });
+            // console.log('Response status:', response.status);
+            // console.log('Response data:', response.data);
+            if (response.status === 200 || response.status === 201) {
+                toast.warning('Vui lòng kiểm tra email để xác thực tài khoản');
+                setShowVerification(true);
+            }
+        } catch (error) {
+            // console.error('Lỗi:', error);
+            toast.error('Đăng ký thất bại');
+        }
+    };
 
-        // Assuming registration is successful
-        toast.success('Đăng ký thành công');
-        navigate('/login');
+    const handleVerificationSubmit = async (event) => {
+        event.preventDefault();
+        console.log('Verification Code:', verificationCode);
+
+        try {
+            const response = await axios.post('http://localhost:3000/auth/verify', {
+                email: email,
+                verifycode: verificationCode,
+            });
+
+            if (response.status === 200 || response.status === 201) {
+                toast.success('Đăng ký thành công');
+                navigate('/login');
+            } else {
+                setVerificationError('Mã nhập không đúng');
+            }
+        } catch (error) {
+            // console.error('Verification error:', error);
+            toast.error('Mã nhập không đúng');
+            setVerificationError('lỗi không xác định');
+        }
     };
 
     return (
@@ -54,7 +92,7 @@ const Register = () => {
             <main className="l-main">
                 <div className="l-user">
                     <div className="c-panel group">
-                        <img className="c-panel__img" src="" alt="Logo-TwoT" />
+                        <img className="c-panel__img" src={logo} alt="Logo-TwoT" />
 
                         <div className="c-panel__form">
                             <input
@@ -79,7 +117,7 @@ const Register = () => {
                                 value={againpassword}
                                 onChange={handleagainPasswordChange}
                                 required
-                                placeholder="Agian password"
+                                placeholder="Again password"
                             />
                             <input
                                 type="text"
@@ -89,9 +127,26 @@ const Register = () => {
                                 required
                                 placeholder="UserName"
                             />
-                            <button className="c-btn" onClick={handleSubmit}>
-                                Register
-                            </button>
+                            {!showVerification ? (
+                                <button className="c-btn" onClick={handleSubmit}>
+                                    Register
+                                </button>
+                            ) : (
+                                <>
+                                    <input
+                                        type="text"
+                                        className="c-panel__input"
+                                        value={verificationCode}
+                                        onChange={(e) => setVerificationCode(e.target.value)}
+                                        required
+                                        placeholder="Verification Code"
+                                    />
+                                    {verificationError && <p className="error-message">{verificationError}</p>}
+                                    <button className="c-btn" onClick={handleVerificationSubmit}>
+                                        Submit Verification
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                     <div className="c-signup group">

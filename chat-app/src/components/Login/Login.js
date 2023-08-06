@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import { auth, provider } from '../../Firebase/Firebaseconfig';
 import './Login.scss';
-import logo from '../../image/logopng.png';
+import logo from '../../image/logo.png'
 
 const Login = ({ setAuthenticated }) => {
     const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const Login = ({ setAuthenticated }) => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            navigate('/layout'); // Chuyển hướng đến trang Layout nếu có token
+            navigate('/layout');
         }
     }, [navigate]);
 
@@ -42,27 +43,32 @@ const Login = ({ setAuthenticated }) => {
 
     const handleGoogleLogin = async () => {};
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         if (!email || !password) {
             toast.error('Vui lòng nhập đầy đủ email và password');
             return;
         }
-
-        console.log('Email:', email);
-        console.log('Password:', password);
-
-        // Xử lý logic đăng nhập ở đây
-        // Gọi API, kiểm tra thông tin đăng nhập, xác thực,...
-        const isLoggedIn = true; // Giả sử đăng nhập thành công
-
-        if (isLoggedIn) {
-            localStorage.setItem('token', 'your_token_here');
-            setAuthenticated(true);
-            toast.success('Đăng nhập thành công');
-            navigate('/layout'); // Chuyển hướng đến trang Layout sau khi đăng nhập thành công
-        } else {
-            console.log('Đăng nhập không thành công');
+    
+        try {
+            const response = await axios.post('http://localhost:3000/auth/login', {
+                email: email,
+                hashPassword: password
+            });
+    
+            const { accessToken, refreshToken } = response.data;
+    
+            if (accessToken && refreshToken) {
+                localStorage.setItem('token', accessToken);
+                setAuthenticated(true);
+                toast.success('Đăng nhập thành công');
+                navigate('/layout'); 
+            } else {
+                toast.error('Đăng nhập không thành công');
+            }
+        } catch (error) {
+            toast.error('Sai tài khoản hoặc mật khẩu');
+            console.log("thanhtongdeptrai");
         }
     };
 
