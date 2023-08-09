@@ -5,6 +5,7 @@ import tong from '../../image/thanhtong.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faVideo, faEllipsisV, faSearch, faPlane } from '@fortawesome/free-solid-svg-icons';
 import io from 'socket.io-client';
+import logoo from '~/image/logo.png';
 import moment from 'moment';
 
 function Messenger() {
@@ -50,7 +51,7 @@ function Messenger() {
             <div className="search-user">
                 <div className="search-user-logo">
                     <Link to="/layout">
-                        <img src="" alt="Logo" />
+                        <img src={logoo} alt="Logo" />
                     </Link>
                 </div>
                 <div className="search-user-input">

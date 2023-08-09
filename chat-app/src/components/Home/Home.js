@@ -8,8 +8,7 @@ import tong from '../../image/thanhtong.jpg';
 const Home = () => {
     const [isLiked, setIsLiked] = useState(false);
     const [showComments, setShowComments] = useState(false);
-    const [userComment, setUserComment] = useState('');
-    const [comments, setComments] = useState([]);
+
     const [hidden, setHidden] = useState(false);
 
     const handleLike = () => {
@@ -18,17 +17,6 @@ const Home = () => {
 
     const handleComment = () => {
         setShowComments(!showComments);
-    };
-
-    const handleChange = (event) => {
-        setUserComment(event.target.value);
-    };
-
-    const handleSubmitComment = () => {
-        if (userComment.trim() !== '') {
-            setComments([...comments, userComment]);
-            setUserComment('');
-        }
     };
 
     const handleDelete = () => {
@@ -70,35 +58,9 @@ const Home = () => {
                         <IconButton onClick={handleComment}>
                             <Comment className="bottomLeftIcon" style={{ color: 'white' }} />
                         </IconButton>
-                        {showComments && (
-                            <div className="commentModal">
-                                <div className="modalContent">
-                                    <div className="modalHeader">
-                                        <h2>Nhập bình luận của bạn</h2>
-                                        <IconButton onClick={handleComment}>
-                                            <Close />
-                                        </IconButton>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        placeholder="Nhập bình luận của bạn..."
-                                        value={userComment}
-                                        onChange={handleChange}
-                                    />
-                                    <button onClick={handleSubmitComment}>Gửi</button>
-                                    <div className="userComments">
-                                        {comments.map((comment, index) => (
-                                            <div key={index} className="comment">
-                                                {comment}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
                     </div>
                     <div className="postBottomRight">
-                        <span className="postCommentText">{comments.length} · comments</span>
+                        <span className="postCommentText">comments</span>
                     </div>
                 </div>
             </div>

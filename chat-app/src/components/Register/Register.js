@@ -42,9 +42,12 @@ const Register = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // console.log('Name:', name);
-        // console.log('Email:', email);
-        // console.log('Password:', password);
+
+        if (password !== againpassword) {
+            toast.error('Mật khẩu không khớp');
+            return;
+        }
+      
 
         try {
             const response = await axios.post('http://localhost:3000/auth/register', {
@@ -52,8 +55,8 @@ const Register = () => {
                 hashPassword: password,
                 userName: name,
             });
-            // console.log('Response status:', response.status);
-            // console.log('Response data:', response.data);
+            // console.log('status:', response.status);
+            // console.log('data:', response.data);
             if (response.status === 200 || response.status === 201) {
                 toast.warning('Vui lòng kiểm tra email để xác thực tài khoản');
                 setShowVerification(true);
@@ -66,7 +69,6 @@ const Register = () => {
 
     const handleVerificationSubmit = async (event) => {
         event.preventDefault();
-        console.log('Verification Code:', verificationCode);
 
         try {
             const response = await axios.post('http://localhost:3000/auth/verify', {
@@ -81,9 +83,9 @@ const Register = () => {
                 setVerificationError('Mã nhập không đúng');
             }
         } catch (error) {
-            // console.error('Verification error:', error);
+            // console.error('Lỗi ', error);
             toast.error('Mã nhập không đúng');
-            setVerificationError('lỗi không xác định');
+            setVerificationError('Mã nhập không đúng');
         }
     };
 
