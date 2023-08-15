@@ -21,7 +21,7 @@
         // display: flex;
         // flex-wrap: wrap;
         overflow: auto;
-        max-height: 550px;
+        height: 100%;
     }
 
     .contact-item {
@@ -39,7 +39,7 @@
 
         .modal {
             position: absolute;
-            z-index: 11;
+            z-index: 11000;
             top: 100%;
             left: 0;
             width: 100%;

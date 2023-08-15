@@ -20,6 +20,8 @@ const Navbar = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+
         // setAuthenticated(false);
         navigate('/login');
         // toast.success('Đăng xuất thành công');

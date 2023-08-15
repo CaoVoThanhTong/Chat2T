@@ -63,7 +63,7 @@ const Register = () => {
             }
         } catch (error) {
             // console.error('Lỗi:', error);
-            toast.error('Đăng ký thất bại');
+            toast.error('Email đã tồn tại');
         }
     };
 

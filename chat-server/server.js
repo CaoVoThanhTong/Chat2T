@@ -3,7 +3,7 @@ const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3001",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
   },
@@ -23,5 +23,5 @@ io.on("connection", (socket) => {
 });
 
 http.listen(5000, () => {
-  console.log("Server is running on http://localhost:5000");
+  console.log("Server is running on http://localhost:5001");
 });

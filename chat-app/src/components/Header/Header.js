@@ -15,7 +15,7 @@ const Header = () => {
     return (
         <div className="navbarContainer">
             <div className="navbarLeft">
-                <Link to="/header" style={{ textDecoration: 'none' }}>
+                <Link to="/layout" style={{ textDecoration: 'none' }}>
                     <span className="logo">TowT</span>
                 </Link>
             </div>

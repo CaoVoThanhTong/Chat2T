@@ -5,9 +5,10 @@ import { Edit } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import Navbar from '~/components/Navbar';
 import Contact from '~/components/Contact';
-import logo from '~/image/thanhtong.jpg';
+// import logo from '~/image/thanhtong.jpg';
 import logoo from '~/image/logo.png';
 import Image from '~/image/img.png';
+import YouPost from './YouPost/YouPost';
 import './Profile.scss';
 
 function EditProfileModal({
@@ -34,22 +35,22 @@ function EditProfileModal({
                     color: 'black',
                     boxShadow: 24,
                     p: 4,
+                    overflowY: 'auto',
+                    maxHeight: '80vh',
                 }}
             >
                 <h1 className="contentedit">Edit Profile</h1>
-                {/* <>Update avatar</> */}
-                <div className='left' onChange={handleAvatarChange}>
+                <div className="left" onChange={handleAvatarChange}>
                     <input type="file" id="file" style={{ display: 'none' }} />
                     <label htmlFor="file">
                         <div className="item">
                             <img src={Image} alt="" />
                             <span>Update avata</span>
-                        </div >
+                        </div>
                     </label>
                 </div>
-                {/* <input type="file" accept="image/*" placeholder='update avatar' onChange={handleAvatarChange} /> */}
                 <TextField label="Name" value={name} onChange={onNameChange} fullWidth sx={{ mt: 2, color: 'white' }} />
-                <TextField label="Bio" value={bio} onChange={onBioChange} fullWidth multiline sx={{ mt: 2 }} />
+                <TextField label="Bio" value={bio || ''} onChange={onBioChange} fullWidth multiline sx={{ mt: 2 }} />
                 {newAvatar && <img src={newAvatar} alt="New Avatar" style={{ maxWidth: '100%', marginTop: '10px' }} />}
                 <Button onClick={onSave} sx={{ mt: 2 }} variant="contained">
                     Save
@@ -60,30 +61,32 @@ function EditProfileModal({
 }
 
 function Profile() {
+    const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [bio, setBio] = useState('');
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [newAvatar, setNewAvatar] = useState('');
-    // Gọi API để lấy thông tin người dùng khi component được tạo
+
     useEffect(() => {
-        // Lấy mã thông báo từ localStorage
         const token = localStorage.getItem('token');
 
         if (token) {
-            axios.get('http://localhost:3000/user/me', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => {
-                const userData = response.data;
-                setName(userData.userName);
-                setBio(userData.bio);
-                // Nếu API cung cấp URL ảnh đại diện, bạn có thể cập nhật newAvatar tại đây
-            })
-            .catch(error => {
-                console.error('Error fetching user information:', error);
-            });
+            axios
+                .get('http://localhost:3000/user/me', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then((response) => {
+                    const userData = response.data;
+                    setId(userData.id);
+                    setName(userData.userName);
+                    setBio(userData.bio || ''); // Set giá trị mặc định nếu bio là null
+                    setNewAvatar(userData.avatar);
+                })
+                .catch((error) => {
+                    console.error('Error fetching user information:', error);
+                });
         }
     }, []);
 
@@ -99,25 +102,30 @@ function Profile() {
         const token = localStorage.getItem('token');
 
         if (token) {
-            axios.put('http://localhost:3000/user/me', {
-                name: name,
-                bio: bio,
-                avatar: newAvatar, // Gửi ảnh đại diện mới nếu có
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => {
-                console.log('Updated Name:', name);
-                console.log('Updated Bio:', bio);
-                console.log('API Response:', response.data);
+            axios
+                .patch(
+                    'http://localhost:3000/user/' + id,
+                    {
+                        userName: name,
+                        bio: bio,
+                        avatar: newAvatar,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    },
+                )
+                .then((response) => {
+                    // console.log('Updated Name:', name);
+                    // console.log('Updated Bio:', bio);
+                    console.log('API Response:', response.data);
 
-                setIsEditModalOpen(false); // Đóng modal chỉnh sửa
-            })
-            .catch(error => {
-                console.error('Error updating profile:', error);
-            });
+                    setIsEditModalOpen(false);
+                })
+                .catch((error) => {
+                    console.error('Error updating profile:', error);
+                });
         }
     };
 
@@ -128,9 +136,21 @@ function Profile() {
     const handleAvatarChange = (event) => {
         const selectedFile = event.target.files[0];
         if (selectedFile) {
-            setNewAvatar(URL.createObjectURL(selectedFile));
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const base64Data = event.target.result;
+                setNewAvatar(base64Data);
+                localStorage.setItem('newAvatar', base64Data);
+            };
+            reader.readAsDataURL(selectedFile);
         }
     };
+    useEffect(() => {
+        const storedAvatar = localStorage.getItem('newAvatar');
+        if (storedAvatar) {
+            setNewAvatar(storedAvatar);
+        }
+    }, []);
 
     return (
         <div className="wrapper">
@@ -145,7 +165,7 @@ function Profile() {
             <div className="info__center">
                 <div className="info">
                     <div className="info__avatar">
-                        {newAvatar ? <img src={newAvatar} alt="New Avatar" /> : <img src={logo} alt="Default Avatar" />}
+                        <img src={newAvatar || ''} alt="Avatar" />
                     </div>
                     <div className="info__content">
                         <div className="info__name">
@@ -175,10 +195,11 @@ function Profile() {
                     </div>
                 </div>
                 {/* ... */}
+                <YouPost />
             </div>
             <div className="info__right">
                 <div className="logo__info">
-                    <img src={logo} alt="Logo" />
+                    <img src={newAvatar || ''} alt="Avatar" />
                 </div>
                 <Contact />
             </div>

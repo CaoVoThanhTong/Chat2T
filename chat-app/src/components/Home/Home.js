@@ -1,69 +1,118 @@
-import React, { useState } from 'react';
-import './Home.scss';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import moment from 'moment';
+// import { formatDistanceToNow } from 'date-fns';
 import { IconButton } from '@mui/material';
 import { Comment, Close, Favorite } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import tong from '../../image/thanhtong.jpg';
+import './Home.scss';
 
 const Home = () => {
+    const [posts, setPosts] = useState([]);
     const [isLiked, setIsLiked] = useState(false);
-    const [showComments, setShowComments] = useState(false);
+    const [users, setUsers] = useState({});
 
-    const [hidden, setHidden] = useState(false);
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            axios
+                .get('http://localhost:3000/article/all', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then((response) => {
+                    setPosts(response.data);
+                    const userIds = [...new Set(response.data.map((post) => post.userId))];
+                    userIds.forEach((userId) => {
+                        axios
+                            .get(`http://localhost:3000/user/${userId}`, {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            })
+                            .then((userResponse) => {
+                                setUsers((prevUsers) => ({
+                                    ...prevUsers,
+                                    [userId]: userResponse.data,
+                                }));
+                            })
+                            .catch((error) => {
+                                console.error('Error fetching user data:', error);
+                            });
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error fetching posts:', error);
+                });
+        }
+    }, []);
 
     const handleLike = () => {
         setIsLiked(!isLiked);
     };
 
-    const handleComment = () => {
-        setShowComments(!showComments);
-    };
+    // const handleComment = () => {
+    //     setShowComments(!showComments);
+    // };
 
-    const handleDelete = () => {
-        setHidden(true);
-    };
+    // const handleDelete = () => {
+    //     setHidden(true);
+    // };
 
-    if (hidden) {
-        return null; // Return nothing to hide the post
-    }
+    // if (hidden) {
+    //     return null;
+    // }
 
     return (
-        <div className="post">
-            <div className="postWrapper">
-                <div className="postTop">
-                    <div className="postTopLeft">
-                        <Link to="/profile">
-                            <img src={tong} alt="" className="postProfileImg" />
-                        </Link>
-                        <span className="postUsername">Cao Võ Thanh Tòng</span>
-                        <span className="postDate">14h36</span>
-                    </div>
-                    <div className="postTopRight">
-                        <IconButton onClick={handleDelete}>
-                            <Close className="postVertButton" />
-                        </IconButton>
+        <div>
+            {posts.map((post) => (
+                <div className="post" key={post.post_id}>
+                    <div className="postWrapper">
+                        <div className="postTop">
+                            <div className="postTopLeft">
+                                {users[post.userId] && (
+                                    <>
+                                        <Link to="/messenger">
+                                            <img src={users[post.userId].avatar} alt="" className="postProfileImg" />
+                                        </Link>
+                                        <div className='Name_Date'>
+                                            <span className="postUsername">{users[post.userId].userName}</span>
+                                            <span className="postDate">{moment(post.timestamp).format('HH:mm')}</span>
+                                            {/* <span className="postDate">{formatDistanceToNow(new Date(post.timestamp), { addSuffix: true })}</span> */}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+
+                            <div className="postTopRight">
+                                <IconButton>
+                                    <Close className="postVertButton" />
+                                </IconButton>
+                            </div>
+                        </div>
+                        <div className="postCenter">
+                            <span className="postText" style={{ color: 'ccc' }}>
+                                {post.content}
+                            </span>
+                            {post.image && <img src={post.image} alt="" className="postImg" />}
+                        </div>
+                        <div className="postBottom">
+                            <div className="postBottomLeft">
+                                <IconButton onClick={handleLike}>
+                                    <Favorite className="bottomLeftIcon" style={{ color: isLiked ? 'red' : 'white' }} />
+                                </IconButton>
+                                <IconButton>
+                                    <Comment className="bottomLeftIcon" style={{ color: 'white' }} />
+                                </IconButton>
+                            </div>
+                            <div className="postBottomRight">
+                                <span className="postCommentText">comments</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="postCenter">
-                    <span className="postText" style={{ color: '#ccc' }}>
-                        Thanh Tòng đẹp trai vãi
-                    </span>
-                    <img src="{tong}" alt="" className="postImg" />
-                </div>
-                <div className="postBottom">
-                    <div className="postBottomLeft">
-                        <IconButton onClick={handleLike}>
-                            <Favorite className="bottomLeftIcon" style={{ color: isLiked ? 'red' : 'white' }} />
-                        </IconButton>
-                        <IconButton onClick={handleComment}>
-                            <Comment className="bottomLeftIcon" style={{ color: 'white' }} />
-                        </IconButton>
-                    </div>
-                    <div className="postBottomRight">
-                        <span className="postCommentText">comments</span>
-                    </div>
-                </div>
-            </div>
+            ))}
         </div>
     );
 };
