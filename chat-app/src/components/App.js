@@ -1,7 +1,7 @@
 // App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Header from './Header';
+// import Header from './Header';
 import Messenger from './Messenger';
 import Login from './Login';
 import Register from './Register';
@@ -34,7 +34,7 @@ const App = () => {
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/messenger" element={<Messenger />} />
                         <Route path="/profile" element={<Profile />} />
-                        <Route path="/header" element={<Header />} />
+                        {/* <Route path="/header" element={<Header />} /> */}
                         <Route path="/navbar" element={<Navbar />} />
                     </>
                 ) : (

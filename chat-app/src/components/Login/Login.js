@@ -6,11 +6,12 @@ import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import { auth, provider } from '../../Firebase/Firebaseconfig';
 import './Login.scss';
-import logo from '../../image/logo.png'
+import logo from '../../image/logo.png';
 
 const Login = ({ setAuthenticated }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,28 +50,77 @@ const Login = ({ setAuthenticated }) => {
             toast.error('Vui lòng nhập đầy đủ email và password');
             return;
         }
-    
+
         try {
             const response = await axios.post('http://localhost:3000/auth/login', {
                 email: email,
-                hashPassword: password
+                hashPassword: password,
             });
-    
+
             const { accessToken, refreshToken } = response.data;
-    
+
             if (accessToken && refreshToken) {
+                // Xoá accessToken và refreshToken cũ
+                // localStorage.removeItem('token');
+                // localStorage.removeItem('refreshToken');
+
+                // Lưu accessToken và refreshToken mới
                 localStorage.setItem('token', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+
                 setAuthenticated(true);
                 toast.success('Đăng nhập thành công');
-                navigate('/layout'); 
+
+                setTimeout(refreshToken, 150000);
+
+                navigate('/layout');
             } else {
                 toast.error('Đăng nhập không thành công');
             }
         } catch (error) {
             toast.error('Sai tài khoản hoặc mật khẩu');
-            console.log("thanhtongdeptrai");
         }
     };
+
+    const refreshToken = async () => {
+        try {
+            const refreshToken = localStorage.getItem('refreshToken');
+
+            if (refreshToken) {
+                const response = await axios.post(
+                    'http://localhost:3000/auth/refresh',
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${refreshToken}`,
+                        },
+                    },
+                );
+
+                const { accessToken } = response.data;
+
+                if (accessToken) {
+                    // Xoá accessToken cũ
+                    // localStorage.removeItem('token');
+
+                    // Lưu accessToken mới
+                    localStorage.setItem('token', accessToken);
+                }
+            } else {
+                console.log('No refreshToken found');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        const refreshTokenInterval = setInterval(refreshToken, 1800000);
+
+        refreshToken();
+
+        return () => clearInterval(refreshTokenInterval);
+    }, []);
 
     return (
         <div className="bodyy">
