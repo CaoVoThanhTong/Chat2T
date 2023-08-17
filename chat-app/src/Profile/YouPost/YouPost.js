@@ -57,8 +57,10 @@ function YouPost() {
                                 <Link to="/profile">
                                     <img src={userData.avatar} alt="" className="postProfileImg" />
                                 </Link>
-                                <span className="postUsername">{userData.userName}</span>
-                                <span className="postDate">14h36</span>
+                                <div className="Name_Date">
+                                    <span className="postUsername">{userData.userName}</span>
+                                    <span className="postDate">14h36</span>
+                                </div>
                             </div>
                             <div className="postTopRight">
                                 <IconButton>

@@ -43,7 +43,7 @@ function Messenger() {
     }, []);
 
     useEffect(() => {
-        const newSocket = io('http://localhost:5001');
+        const newSocket = io('http://localhost:5000');
         setSocket(newSocket);
 
         return () => {

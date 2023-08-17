@@ -61,7 +61,7 @@ function EditProfileModal({
 }
 
 function Profile() {
-    const [id, setId] = useState('');
+    // const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [bio, setBio] = useState('');
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -79,13 +79,13 @@ function Profile() {
                 })
                 .then((response) => {
                     const userData = response.data;
-                    setId(userData.id);
+                    // setId(userData.id);
                     setName(userData.userName);
-                    setBio(userData.bio || ''); // Set giá trị mặc định nếu bio là null
+                    setBio(userData.bio || ''); 
                     setNewAvatar(userData.avatar);
                 })
                 .catch((error) => {
-                    console.error('Error fetching user information:', error);
+                    console.error('Looix API user:', error);
                 });
         }
     }, []);
@@ -104,7 +104,7 @@ function Profile() {
         if (token) {
             axios
                 .patch(
-                    'http://localhost:3000/user/' + id,
+                    'http://localhost:3000/user/',
                     {
                         userName: name,
                         bio: bio,
@@ -124,7 +124,7 @@ function Profile() {
                     setIsEditModalOpen(false);
                 })
                 .catch((error) => {
-                    console.error('Error updating profile:', error);
+                    console.error('Error API:', error);
                 });
         }
     };
@@ -194,7 +194,7 @@ function Profile() {
                         <div className="info__bio">Bio: {bio}</div>
                     </div>
                 </div>
-                {/* ... */}
+                {/* thoong tin cuar bafi vieest */}
                 <YouPost />
             </div>
             <div className="info__right">

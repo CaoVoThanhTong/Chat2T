@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Contact.scss';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 // import tong from '../../image/thanhtong.jpg';
 
 const Contact = () => {
@@ -67,7 +68,9 @@ const Contact = () => {
         <div className="wrapper">
             <div className="contact">
                 <div className="contact-title">
-                    <h3>Contacts</h3>
+                    <Link to="/messenger">
+                        <h3>Contacts:</h3>
+                    </Link>
                 </div>
                 <div className="contact-list">
                     {allUsers.map(user => (
@@ -87,7 +90,9 @@ const Contact = () => {
                                 <div className="contact-message">
                                     <p>Đang hoạt động</p>
                                 </div>
-                            </div>
+                                </div>
+                      
+                                
                             {isHovered && hoveredUserId === user.id && userData && (
                                 <div className="modal">
                                     <div className="modal-content">

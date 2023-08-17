@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import './Upload.scss';
 import Image from '../../image/img.png';
 import Map from '../../image/map.png';
 import Friend from '../../image/friend.png';
-import tong from '../../image/thanhtong.jpg';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// import tong from '../../image/thanhtong.jpg';
 // import { useContext } from 'react';
 // import { AuthContext } from '../../context/authContext';
 
@@ -12,6 +15,9 @@ const Upload = () => {
     // const { currentUser } = useContext(AuthContext);
     const [content, setContent] = useState('');
     const [imageBase64, setImageBase64] = useState('');
+    // const [userName, setUserName] = useState('');
+    const [userAvatar, setUserAvatar] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const handleContentChange = (event) => {
         setContent(event.target.value);
@@ -48,21 +54,53 @@ const Upload = () => {
             )
             .then((response) => {
                 console.log('Upload bài viết thành công!', response.data);
+                toast.success('Upload bài viết thành công!', { autoClose: 5000 });
+                setContent('');
+                setImageBase64('');
             })
-            .catch((error) => {
+                .catch((error) => {
+                toast.warning('Vui lòng nhập đầy đủ content để có thể đăng bài!', { autoClose: 5000 });
                 console.error('Upload bài viết thất bại:', error);
             });
         }
     };
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            axios.get('http://localhost:3000/user/me', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then((response) => {
+                  //  console.log('Thông tin người dùng:', response.data);
+                    const data = response.data;
+                    // setUserName(data.userName);
+                    setUserAvatar(data.avatar);
+                    // Tách tên thành mảng và lấy phần tử cuối cùng
+                    
+                    const nameParts = data.userName.split(' ');
+                    if (nameParts.length > 0) {
+                        setLastName(nameParts[nameParts.length - 1]);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Lỗi khi lấy thông tin người dùng:', error);
+                });
+        }
+    }, []);
+
+
     return (
         <div className="share">
             <div className="container">
                 <div className="top">
-                    <img src={tong} alt="loi hinh anh" />
+                    <img src={userAvatar} alt="loi hinh anh" />
+            
                     <input
                         type="text"
-                        placeholder={`What's on your mind Tòng?`}
+                        placeholder={`What's on your mind ${lastName}?`}
                         value={content}
                         onChange={handleContentChange}
                     />
@@ -96,6 +134,7 @@ const Upload = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

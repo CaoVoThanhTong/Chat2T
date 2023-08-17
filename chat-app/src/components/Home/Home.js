@@ -38,12 +38,12 @@ const Home = () => {
                                 }));
                             })
                             .catch((error) => {
-                                console.error('Error fetching user data:', error);
+                                console.error('Lỗi API user:', error);
                             });
                     });
                 })
                 .catch((error) => {
-                    console.error('Error fetching posts:', error);
+                    console.error('Lỗi API posts:', error);
                 });
         }
     }, []);
