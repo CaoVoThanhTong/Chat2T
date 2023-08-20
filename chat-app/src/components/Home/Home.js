@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 // import { formatDistanceToNow } from 'date-fns';
@@ -6,8 +6,12 @@ import { IconButton } from '@mui/material';
 import { Comment, Close, Favorite } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import './Home.scss';
+import { LightModeContext } from '~/context/lightModeContext';
 
 const Home = () => {
+
+    const { lightMode } = useContext(LightModeContext);
+
     const [posts, setPosts] = useState([]);
     const [isLiked, setIsLiked] = useState(false);
     const [users, setUsers] = useState({});
@@ -65,7 +69,7 @@ const Home = () => {
     // }
 
     return (
-        <div>
+        <div className={lightMode ? 'light' : 'dark'}>
             {posts.map((post) => (
                 <div className="post" key={post.post_id}>
                     <div className="postWrapper">

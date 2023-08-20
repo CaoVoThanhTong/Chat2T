@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import './Contact.scss';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { LightModeContext } from '~/context/lightModeContext';
+
+import '~/style/lightMode.scss'
 // import tong from '../../image/thanhtong.jpg';
 
 const Contact = () => {
+
+    const { lightMode } = useContext(LightModeContext);
+
     const [isHovered, setIsHovered] = useState(false);
     const [hoveredUserId, setHoveredUserId] = useState(null);
     const [userData, setUserData] = useState(null);
@@ -65,7 +71,7 @@ const Contact = () => {
     }, [hoveredUserId, isHovered]);
 
     return (
-        <div className="wrapper">
+        <div className={`wrapper ${lightMode ? 'light' : 'dark'}`}>
             <div className="contact">
                 <div className="contact-title">
                     <Link to="/messenger">

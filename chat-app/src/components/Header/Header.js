@@ -1,19 +1,22 @@
-import React from 'react';
-// import { Tooltip } from 'react-tippy';
-// import 'react-tippy/dist/tippy.css';
+import React, { useContext } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link } from 'react-router-dom';
+import { LightModeContext } from '~/context/lightModeContext';
 
 import user from '../../image/thanhtong.jpg';
 
 import './header.scss';
 
+import '~/style/lightMode.scss';
+
 const Header = () => {
+    const { lightMode } = useContext(LightModeContext);
+
     return (
-        <div className="navbarContainer">
+        <div className={`navbarContainer ${lightMode ? 'light' : 'dark'}`}>
             <div className="navbarLeft">
                 <Link to="/layout" style={{ textDecoration: 'none' }}>
                     <span className="logo">TowT</span>
