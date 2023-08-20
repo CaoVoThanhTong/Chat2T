@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
@@ -11,12 +11,15 @@ import { faCertificate } from '@fortawesome/free-solid-svg-icons';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faSmile } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { LightModeContext } from '~/context/lightModeContext';
 
 import './Navbar.scss';
+import '~/style/lightMode.scss'
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const { lightMode, dispatch } = useContext(LightModeContext);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -28,7 +31,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className="wrapper">
+        <div className={`wrapper ${lightMode ? 'light' : 'dark'}`}>
             <div className="navbar">
                 <div className="action">
                     <Link className="icon" to="/layout">
@@ -63,9 +66,11 @@ const Navbar = () => {
                         <FontAwesomeIcon icon={faHeadphones} />
                         <div className="content">Exprore</div>
                     </Link>
-                    <Link className="icon" to="/layout">
-                        <FontAwesomeIcon icon={faCertificate} />
-                        <div className="content">Theme</div>
+                    <Link className="icon" >
+                        <FontAwesomeIcon icon={lightMode ? faSun : faMoon} />
+                        <div className="content" onClick={() => dispatch({ type: 'TOGGLE' })}>
+                            {lightMode ? 'Switch Light' : 'Switch Dark'}
+                        </div>
                     </Link>
                     <Link className="icon" to="/layout">
                         <FontAwesomeIcon icon={faHeart} />

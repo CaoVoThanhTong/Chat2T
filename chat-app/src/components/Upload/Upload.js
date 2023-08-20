@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import axios from 'axios';
 import './Upload.scss';
 import Image from '../../image/img.png';
@@ -7,11 +7,15 @@ import Friend from '../../image/friend.png';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { LightModeContext } from '~/context/lightModeContext';
+
 // import tong from '../../image/thanhtong.jpg';
 // import { useContext } from 'react';
 // import { AuthContext } from '../../context/authContext';
 
 const Upload = () => {
+
+    const { lightMode } = useContext(LightModeContext);
     // const { currentUser } = useContext(AuthContext);
     const [content, setContent] = useState('');
     const [imageBase64, setImageBase64] = useState('');
@@ -93,14 +97,14 @@ const Upload = () => {
 
 
     return (
-        <div className="share">
+        <div className={`share ${lightMode ? 'light' : 'dark'}`}>
             <div className="container">
                 <div className="top">
                     <img src={userAvatar} alt="loi hinh anh" />
             
                     <input
                         type="text"
-                        placeholder={`What's on your mind ${lastName}?`}
+                        placeholder={`What's on your mind, ${lastName}?`}
                         value={content}
                         onChange={handleContentChange}
                     />

@@ -71,7 +71,7 @@ const Login = ({ setAuthenticated }) => {
                 setAuthenticated(true);
                 toast.success('Đăng nhập thành công');
 
-                setTimeout(refreshToken, 150000);
+                // setTimeout(refreshToken, 150000);
 
                 navigate('/layout');
             } else {
