@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { IconButton, Modal, Box, TextField, Button } from '@mui/material';
 import { Edit } from '@mui/icons-material';
@@ -10,6 +10,9 @@ import logoo from '~/image/logo.png';
 import Image from '~/image/img.png';
 import YouPost from './YouPost/YouPost';
 import './Profile.scss';
+
+import { LightModeContext } from '~/context/lightModeContext';
+import '~/style/lightMode.scss'
 
 function EditProfileModal({
     isOpen,
@@ -61,6 +64,19 @@ function EditProfileModal({
 }
 
 function Profile() {
+
+    const { lightMode } = useContext(LightModeContext);
+
+    useEffect(() => {
+        if (lightMode) {
+            document.body.classList.add('light-mode');
+            document.body.classList.remove('dark-mode');
+        } else {
+            document.body.classList.remove('light-mode');
+            document.body.classList.add('dark-mode');
+        }
+    }, [lightMode]);
+
     // const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [bio, setBio] = useState('');
@@ -153,7 +169,7 @@ function Profile() {
     }, []);
 
     return (
-        <div className="wrapper">
+        <div className={`wrapper ${lightMode ? 'light' : 'dark'}`}>
             <div className="info__left">
                 <div className="logo__infoo">
                     <Link to="/layout">

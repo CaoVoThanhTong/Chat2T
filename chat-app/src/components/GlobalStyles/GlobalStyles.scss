@@ -3,7 +3,9 @@
 
 :root {
     --primary: #fe2c55;
+    --background-color: #000000;
 }
+
 * {
     margin: 0;
     padding: 0;
@@ -19,5 +21,14 @@ body {
     font-size: 1.6rem;
     line-height: 1.5;
     text-rendering: optimizespeed;
-    background-color: #000000;
+    background-color: var(--background-color);
+}
+
+
+body.light-mode {
+    --background-color: #fdfdfd;
+}
+
+body.dark-mode {
+    --background-color: #000000;
 }

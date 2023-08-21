@@ -136,7 +136,7 @@ const Login = ({ setAuthenticated }) => {
                                 value={email}
                                 onChange={handleEmailChange}
                                 required
-                                placeholder="Email"
+                                placeholder="example@gmail.com"
                             />
                             <input
                                 type="password"

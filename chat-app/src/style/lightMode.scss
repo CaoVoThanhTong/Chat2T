@@ -76,7 +76,7 @@ $light-text: #000000;
     }
 
     .navbarLink {
-        color:#000000;
+        color: #000000;
 
         &:hover {
             color: #ff0000;
@@ -87,7 +87,6 @@ $light-text: #000000;
         color: #000000;
     }
 }
-
 
 //contact
 
@@ -121,51 +120,54 @@ $light-text: #000000;
         }
     }
 }
-//home 
+//home
 .light {
     .post {
-      .postWrapper {
-        background-color: #d1c7c7;
-  
-        .postTopLeft {
-          .postUsername {
-            color: $light-text;
-          }
-        }
-  
-        .postCenter {
-          .postText {
-            color: $light-text;
-          }
-  
-          .postImg {
-            // ...
-          }
-        }
-  
-        .postBottomLeft {
-          .postLikeCounter {
-            color: $light-text;
-          }
-        }
-  
-        .postBottomRight {
-          .postCommentText {
-            color: $light-text !important;
-          }
-        }
-      }
-  
-      .postUsername,
-      .postCommentText {
-        color: $light-text !important;
-      }
-    }
-  }
+        .postWrapper {
+            background-color: #d1c7c7;
 
-  //uploads
-  .share.light {
-    background-color:$light-background;
+            .postTopLeft {
+                .postUsername {
+                    color: $light-text;
+                }
+            }
+
+            .postCenter {
+                .postText {
+                    color: $light-text;
+                }
+
+                .postImg {
+                    // ...
+                }
+            }
+
+            .postBottomLeft {
+                .postLikeCounter {
+                    color: $light-text;
+                }
+            }
+
+            .postBottomRight {
+                .postCommentText {
+                    color: $light-text !important;
+                }
+            }
+        }
+
+        .postVertButton{
+            color: #000000 !important;
+        }
+        .postUsername,
+        .postCommentText {
+            color: $light-text !important;
+        }
+    }
+}
+
+//uploads
+.share.light {
+    background-color: $light-background;
     color: $light-text;
 
     .container {
@@ -200,4 +202,88 @@ $light-text: #000000;
 
 .wrapper.light {
     background-color: $light-background;
+}
+
+//Profile
+
+// .wrapper.light {
+//     background-color: $light-background;
+
+//     .profile {
+//         background-color: $light-background;
+//         color: $light-text;
+
+//         .profile-title {
+//             h3 {
+//                 color: $light-text;
+//             }
+//         }
+
+//         .profile-item {
+//             .modal {
+//                 background-color: $light-background;
+//             }
+
+//             .profile-avatar {
+//                 // ...
+//             }
+
+//             .profile-name h4 {
+//                 color: $light-text;
+//             }
+
+//             .info__bio {
+
+//                 color: $light-text;
+//             }
+//         }
+//     }
+// }
+
+//profile
+
+.wrapper.light {
+    background-color: $light-background;
+
+    .edit_profile,
+    .info__bio {
+        color: $light-text;
+    }
+
+    .info__content .info__name,
+    .info__followew span {
+        color: $light-text;
+    }
+
+    .youpost {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        // width: 100%;
+        position: relative;
+
+        &__item {
+            color: $light-text;
+            background-color: $light-background;
+            // font-family: Schoolbell;
+            // font-size: 60px;
+            font-size: 20px;
+            width: 100px;
+            // font-style: normal;
+            font-weight: 700;
+            line-height: 70px;
+            z-index: 1;
+        }
+    }
+
+    .youpost::after {
+        content: '';
+        position: absolute;
+        bottom: 50%;
+        left: 0px;
+        right: 0;
+        height: 1px;
+        background-color: #000000;
+    }
 }
