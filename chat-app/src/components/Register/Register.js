@@ -47,7 +47,6 @@ const Register = () => {
             toast.error('Mật khẩu không khớp');
             return;
         }
-      
 
         try {
             const response = await axios.post('http://localhost:3000/auth/register', {
@@ -103,7 +102,7 @@ const Register = () => {
                                 value={email}
                                 onChange={handleEmailChange}
                                 required
-                                placeholder="Email"
+                                placeholder="example@gmail.com"
                             />
                             <input
                                 type="password"
@@ -127,7 +126,7 @@ const Register = () => {
                                 value={name}
                                 onChange={handleNameChange}
                                 required
-                                placeholder="UserName"
+                                placeholder="Full Name"
                             />
                             {!showVerification ? (
                                 <button className="c-btn" onClick={handleSubmit}>
