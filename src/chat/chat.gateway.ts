@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   ConnectedSocket,
   MessageBody,
@@ -29,12 +30,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     if (token) {
       try {
-        // this.joinRoom(client);
-        // const oldMessages = await this.chatService.getMessagesBetweenUsers(
-        //   user.id,
-        //   2,
-        // );
-        // client.emit('oldMessages', oldMessages);
       } catch (e) {
         console.log('dính try catch', e);
         client.disconnect();
@@ -76,12 +71,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         msg: el.content,
       });
     });
-    // await client.emit('allOldMessages', {
-    //   sendID: oldMessages.idSend,
-    //   recID: oldMessages.idRep,
-    //   msg: oldMessages.msg,
-    // });
-    console.log(oldMessages);
   }
 
   @SubscribeMessage('sendMessage')
@@ -98,19 +87,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.chatService.createMessage(data.idMe, data.idReceiver, data.msg);
     console.log(`Client ${client.id} sent message to room: ${data.roomName}`);
   }
-  // async handleMessageEvent(
-  //   client: Socket,
-  //   data: { roomName: string; idMe: number; idReceiver: number; msg: string },
-  // ) {
-  //   client.on('sendMessage', (data) => {
-  //     // Gửi tin nhắn cho người nhận
-  //     this.server
-  //       .in(data.roomName)
-  //       .emit('newMessage', { un: data.idMe, ms: data.msg });
-  //     this.chatService.createMessage(data.idMe, data.idReceiver, data.msg);
-  //     console.log(`Client ${client.id} sent message to room: ${data.roomName}`);
-  //   });
-  // }
 
   // Xử lý logic khi có một trình duyệt ngắt kết nối
   async handleDisconnect(client: Socket) {
