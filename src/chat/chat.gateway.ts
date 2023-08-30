@@ -11,8 +11,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import { AuthService } from '../auth/auth.service';
 import { ChatService } from './chat.service';
-import { rawListeners } from 'process';
-
 @WebSocketGateway({ cors: { origin: '*' } })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
@@ -43,13 +41,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('joinRoom')
   joinRoom(client: Socket, roomName: string) {
     client.join(roomName);
+    console.log(client.rooms);
     console.log(`Client ${client.id} joined room: ${roomName}`);
   }
 
   @SubscribeMessage('leaveRoom')
   handleLeaveRoom(client: Socket, roomName: string) {
-    client.leave(roomName);
-    console.log(`Client ${client.id} joined room: ${roomName}`);
+    if (roomName !== null) {
+      client.leave(roomName);
+      console.log(`Client ${client.id} left room: ${roomName}`);
+    }
   }
 
   @SubscribeMessage('oldMessages')
@@ -80,7 +81,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     data: { roomName: string; idMe: number; idReceiver: number; msg: string },
   ) {
     console.log(data);
-
     this.server
       .in(data.roomName)
       .emit('newMessage', { un: data.idMe, ms: data.msg });
@@ -103,4 +103,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       ? `${userId1}-${userId2}`
       : `${userId2}-${userId1}`;
   }
+
+  // leaveAll(client: Socket) {
+  //   const rooms = client.rooms;
+  //   console.log(rooms);
+
+  //   rooms.forEach((roomName) => {
+  //     if (roomName !== client.id) {
+  //       client.leave(roomName);
+  //       console.log(`Client ${client.id} left room: ${roomName}`);
+  //     }
+  //   });
+  // }
 }
