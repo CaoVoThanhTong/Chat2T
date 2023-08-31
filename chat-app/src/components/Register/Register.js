@@ -62,12 +62,17 @@ const Register = () => {
             }
         } catch (error) {
             // console.error('Lỗi:', error);
-            toast.error('Email đã tồn tại');
+            toast.error('Lỗiiii');
         }
     };
 
     const handleVerificationSubmit = async (event) => {
         event.preventDefault();
+        //bổ trống 
+        if (!verificationCode) {
+            setVerificationError('Vui lòng nhập mã xác nhận');
+            return;
+        }
 
         try {
             const response = await axios.post('http://localhost:3000/auth/verify', {
@@ -78,10 +83,12 @@ const Register = () => {
             if (response.status === 200 || response.status === 201) {
                 toast.success('Đăng ký thành công');
                 navigate('/login');
-            } else {
+            }
+            else {
                 setVerificationError('Mã nhập không đúng');
             }
         } catch (error) {
+           
             // console.error('Lỗi ', error);
             toast.error('Mã nhập không đúng');
             setVerificationError('Mã nhập không đúng');

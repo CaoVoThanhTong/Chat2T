@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Messenger.scss';
-// import tong from '../../image/thanhtong.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faVideo, faEllipsisV, faSearch, faPlane } from '@fortawesome/free-solid-svg-icons';
 import io from 'socket.io-client';
@@ -17,16 +16,13 @@ function Messenger() {
     const [userList, setUserList] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-
     const [selectedUser, setSelectedUser] = useState(null);
 
-    const handleUserClick = (user) => {
-        setSelectedUser(user);
-    };
+    const [unreadMessageCounts, setUnreadMessageCounts] = useState({});
+
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-
         if (token) {
             axios
                 .get('http://localhost:3000/user', {
@@ -38,24 +34,51 @@ function Messenger() {
                     setUserList(response.data);
                     setSearchResults(response.data);
                 })
-                .catch((error) => console.error('Lỗi:', error));
+                .catch((error) => console.error('Error:', error));
         }
-    }, []);
+    }, [token]);
 
     useEffect(() => {
-        const newSocket = io('http://localhost:5000');
-        setSocket(newSocket);
+        if (token) {
+            const socket = io.connect('http://localhost:3000', {
+                extraHeaders: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setSocket(socket);
 
-        return () => {
-            newSocket.disconnect();
-        };
-    }, []);
+            return () => {
+                socket.disconnect();
+            };
+        }
+    }, [token]);
 
     useEffect(() => {
         if (socket) {
-            socket.on('receiveMessage', (message) => {
-                setMessages((prevMessages) => [...prevMessages, message]);
+            socket.on('allOldMessages', (payload) => {
+                console.log('Received old message:', payload.msg);
+                setMessages((prevMessages) => [...prevMessages, payload]);
             });
+        }
+    }, [socket]);
+
+    useEffect(() => {
+        if (socket) {
+            const handleNewMessage = (message) => {
+                setMessages((prevMessages) => [...prevMessages, message]);
+
+                setUnreadMessageCounts((prevCounts) => ({
+                    ...prevCounts,
+                    [message.sendID]: (prevCounts[message.sendID] || 0) + 1,
+                }));
+                console.log('Received new message:', message);
+            };
+
+            socket.on('newMessage', handleNewMessage);
+
+            return () => {
+                socket.off('newMessage', handleNewMessage);
+            };
         }
     }, [socket]);
 
@@ -63,15 +86,42 @@ function Messenger() {
         setMessage(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        if (message.trim() !== '') {
-            const newMessage = {
-                text: message,
-                timestamp: Date.now(),
-            };
-            socket.emit('sendMessage', newMessage);
-            setMessage('');
+        console.log('Submit button clicked');
+
+        if (socket && selectedUser && message.trim() !== '') {
+            try {
+                const meResponse = await fetch('http://localhost:3000/user/me', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const newMessage = {
+                    msg: message,
+                    sendTime: Date.now(),
+                };
+
+                console.log(newMessage);
+
+                const meData = await meResponse.json();
+                const myID = meData.id;
+
+                const roomName = myID <= selectedUser.id ? `${myID}-${selectedUser.id}` : `${selectedUser.id}-${myID}`;
+
+                socket.emit('sendMessage', {
+                    roomName,
+                    idMe: myID,
+                    idReceiver: selectedUser.id,
+                    msg: message,
+                });
+
+                console.log('test id', myID);
+                setMessage('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
     };
 
@@ -83,11 +133,53 @@ function Messenger() {
             setSearchResults(userList);
         } else {
             const filteredResults = userList.filter((user) =>
-                user.userName.toLowerCase().includes(value.toLowerCase()),
+                user.userName.toLowerCase().includes(value.toLowerCase())
             );
             setSearchResults(filteredResults);
         }
     };
+
+    const handleUserClick = async (selectedUserID) => {
+        try {
+            const response = await fetch(`http://localhost:3000/user/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const me = await response.json();
+            const selectedUser = searchResults.find((user) => user.id === selectedUserID);
+            setSelectedUser(selectedUser);
+
+            if (socket && selectedUser) {
+                const roomName = `${
+                    me.id <= selectedUserID ? `${me.id}-${selectedUserID}` : `${selectedUserID}-${me.id}`
+                }`;
+
+                console.log('join room:', roomName);
+                socket.emit('joinRoom', roomName);
+                socket.emit('oldMessages', { idMe: me.id, idReceiver: selectedUserID });
+            }
+            setMessages([]);
+
+            const userItems = document.querySelectorAll('.list-user-item');
+            userItems.forEach((item) => {
+                item.classList.remove('active');
+            });
+
+            const selectedUserItem = document.querySelector(`.list-user-item[data-user-id="${selectedUserID}"]`);
+            if (selectedUserItem) {
+                selectedUserItem.classList.add('active');
+            }
+
+            setUnreadMessageCounts((prevCounts) => ({
+                ...prevCounts,
+                [selectedUserID]: 0,
+            }));
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+        }
+    };
+
 
     return (
         <div className="containerr">
@@ -108,7 +200,8 @@ function Messenger() {
                 </div>
                 <div className="list-user-list">
                     {searchResults.map((user) => (
-                        <div className="list-user-item" key={user.id} onClick={() => handleUserClick(user)}>
+                        <div className="list-user-item" data-user-id={user.id} onClick={() => handleUserClick(user.id)}>
+                            <div className="unread-badge">{unreadMessageCounts[user.id] || 0}</div>
                             <div className="list-user-item-avata">
                                 <img src={user.avatar} alt="avatars" />
                             </div>
@@ -124,7 +217,6 @@ function Messenger() {
                             <div className="chat-header-user">
                                 <div className="chat-header-user-avatar">
                                     <img src={selectedUser.avatar} alt="avatars" />
-                                    {/* <img src={tong} alt="avatars" /> */}
                                 </div>
                                 <div className="chat-header-user-name">{selectedUser.userName}</div>
                                 <div className="chat-header-user-action">
@@ -138,13 +230,36 @@ function Messenger() {
                             <div className="chat-body-message">
                                 {messages.map((msg, index) => (
                                     <div
-                                        className={`chat-body-message-item ${msg.isMyMessage ? 'my-message' : ''}`}
+                                        className={`chat-body-message-item ${
+                                            (msg.un && msg.un === selectedUser.id) ||
+                                            (msg.sendID && msg.sendID === selectedUser.id)
+                                                ? 'my-message'
+                                                : (msg.recID && msg.recID === selectedUser.id) ||
+                                                  (msg.un && msg.un !== selectedUser.id)
+                                                ? 'other-message'
+                                                : 'my-message'
+                                        }`}
                                         key={index}
                                     >
-                                        <div className="chat-body-message-item-message">{msg.text}</div>
-                                        <div className="chat-body-message-item-time">
-                                            {moment(msg.timestamp).format('HH:mm')}
+                                        <div className="chat-body-message-item-message">
+                                            {msg.msg ? msg.msg : msg.ms}
+
+                                            <div className="chat-body-message-item-time">
+                                                <div className="chat-body-message-item-time">
+                                                    {moment(msg.sendTime).format(
+                                                        moment(msg.sendTime).isSame(moment(), 'day')
+                                                            ? 'HH:mm'
+                                                            : 'DD/MM/YYYY HH:mm',
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
+
+                                        {console.log('msg.myID:', msg.myID)}
+                                        {console.log('msg.recID:', msg.recID)}
+                                        {console.log('msg.sendID:', msg.sendID)}
+                                        {console.log('msg.un:', msg.un)}
+                                        {console.log('selectedUser.id:', selectedUser.id)}
                                     </div>
                                 ))}
                             </div>
@@ -164,9 +279,7 @@ function Messenger() {
                         </div>
                     </React.Fragment>
                 ) : (
-                        <div className="chat-placeholder">
-                            Chọn một người dùng để bắt đầu cuộc trò chuyện.
-                        </div>
+                    <div className="chat-placeholder">Chọn một người dùng để bắt đầu cuộc trò chuyện.</div>
                 )}
             </div>
         </div>

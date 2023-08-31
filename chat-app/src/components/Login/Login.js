@@ -78,7 +78,7 @@ const Login = ({ setAuthenticated }) => {
                 toast.error('Đăng nhập không thành công');
             }
         } catch (error) {
-            toast.error('Sai tài khoản hoặc mật khẩu');
+            toast.error('Đăng nhập không thành công');
         }
     };
 
@@ -107,7 +107,7 @@ const Login = ({ setAuthenticated }) => {
                     localStorage.setItem('token', accessToken);
                 }
             } else {
-                console.log('No refreshToken found');
+                console.log('Không có refreshToken');
             }
         } catch (error) {
             console.log(error);

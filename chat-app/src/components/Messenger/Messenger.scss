@@ -57,12 +57,14 @@
 }
 
 .list-user-item {
+    position: relative;
     display: flex;
     align-items: center;
     padding: 8px;
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &.active {
         background-color: #292929;
         border-radius: 10px;
     }
@@ -131,8 +133,26 @@
     flex: 1;
     padding: 16px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse; 
+
 }
 
+
+.unread-badge {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    position: absolute;
+    top: 8px;
+    right: 5px;
+}
 .chat-body-message-item {
     display: flex;
     margin-top: 5px;
@@ -194,25 +214,42 @@
 .chat-body-message-item {
     display: flex;
     margin-top: 5px;
-    justify-content: flex-end;
+    justify-content: flex-start ;
 }
 
-.other-message .chat-body-message-item {
-    justify-content: flex-start; 
+
+.my-message{
+    display: flex;
+    justify-content: flex-start !important; 
+
+    .chat-body-message-item-message {
+        background-color: #969292;
+        order: 1;
+    }
+    
+    .chat-body-message-item-time {
+        order: 2; 
+        color: #3E4042;
+    }
 }
+
+.other-message{
+    display: flex;
+    justify-content: flex-end !important; 
+}
+ 
 
 .chat-body-message-item-message {
-    background-color: #292929;
+    background-color: #3E4042;
     padding: 8px;
     border-radius: 8px;
     width: 200px;
     margin-top: 5px;
     color: #fff;
+    display: flex;
+    justify-content: space-between;
 }
 
-.other-message .chat-body-message-item-message {
-    background-color: #000000;
-}
 
 .chat-body-message-item-time {
     margin-top: 16px;
