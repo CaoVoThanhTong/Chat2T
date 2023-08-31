@@ -12,21 +12,20 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    overflow: auto;
+    height: 93%;
 
     .contact-title {
         margin-bottom: 10px;
 
         h3 {
             color: rgb(255, 255, 255);
-            
         }
     }
 
     .contact-list {
         // display: flex;
         // flex-wrap: wrap;
-        overflow: auto;
-        height: 100%;
     }
 
     .contact-item {

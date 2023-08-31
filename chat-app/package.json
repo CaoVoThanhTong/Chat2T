@@ -28,6 +28,7 @@
         "postcss-cli": "^10.1.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-modal": "^3.16.1",
         "react-router-dom": "^6.14.1",
         "react-scripts": "5.0.1",
         "react-tippy": "^1.4.0",

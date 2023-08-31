@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
@@ -6,7 +7,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Link } from 'react-router-dom';
 import { LightModeContext } from '~/context/lightModeContext';
 
-import user from '../../image/thanhtong.jpg';
+// import user from '../../image/thanhtong.jpg';
 
 import './header.scss';
 
@@ -14,6 +15,29 @@ import '~/style/lightMode.scss';
 
 const Header = () => {
     const { lightMode } = useContext(LightModeContext);
+
+const [newAvatar, setNewAvatar] = useState(null);
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        if (token) {
+            axios
+                .get('http://localhost:3000/user/me', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then((response) => {
+                    const userData = response.data;
+                    // setId(userData.id);
+                   
+                    setNewAvatar(userData.avatar);
+                })
+                .catch((error) => {
+                    console.error('Looix API user:', error);
+                });
+        }
+    }, []);
 
     return (
         <div className={`navbarContainer ${lightMode ? 'light' : 'dark'}`}>
@@ -52,7 +76,7 @@ const Header = () => {
                     </div>
                 </div>
                 <Link to="/profile">
-                    <img src={user} alt="" className="navbarImg" />
+                    <img src={newAvatar} alt="" className="navbarImg" />
                 </Link>
             </div>
         </div>
