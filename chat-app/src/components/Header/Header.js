@@ -13,10 +13,10 @@ import './header.scss';
 
 import '~/style/lightMode.scss';
 
-const Header = () => {
+const Header = ({setSearchResults}) => {
     const { lightMode } = useContext(LightModeContext);
 
-const [newAvatar, setNewAvatar] = useState(null);
+    const [newAvatar, setNewAvatar] = useState(null);
     useEffect(() => {
         const token = localStorage.getItem('token');
 
@@ -30,7 +30,7 @@ const [newAvatar, setNewAvatar] = useState(null);
                 .then((response) => {
                     const userData = response.data;
                     // setId(userData.id);
-                   
+
                     setNewAvatar(userData.avatar);
                 })
                 .catch((error) => {
@@ -38,6 +38,38 @@ const [newAvatar, setNewAvatar] = useState(null);
                 });
         }
     }, []);
+
+    const [content, setContent] = useState([]);
+
+    const handleSearch = () => {
+        if (content.trim() === "") {
+            return console.log("Search không thành công"); // Không gọi API nếu nội dung tìm kiếm rỗng
+        }
+        const token = localStorage.getItem('token');
+        if (token) {
+            axios
+                .get(`http://localhost:3000/article/all`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then((response) => {
+                    const matchingPosts = response.data.filter(post =>
+                        post.content.includes(content)
+                    );
+    
+                    if (matchingPosts.length > 0) {
+                        setSearchResults(matchingPosts);
+                        console.log('Search thành công!', matchingPosts);
+                    } else {
+                        console.log('Không tìm thấy kết quả phù hợp.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Lỗi API user:', error);
+                });
+        }
+    };
 
     return (
         <div className={`navbarContainer ${lightMode ? 'light' : 'dark'}`}>
@@ -49,9 +81,16 @@ const [newAvatar, setNewAvatar] = useState(null);
             <div className="navbarCenter">
                 <div className="searchBar">
                     <SearchIcon className="searchIcon" />
-                    <input type="text" placeholder="Search post" className="searchInput" />
-
-                    <button className="searchButton">Search</button>
+                    <input
+                        type="text"
+                        placeholder="Search post"
+                        className="searchInput"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                    />
+                    <button className="searchButton" onClick={handleSearch}>
+                        Search
+                    </button>
                 </div>
             </div>
             <div className="navbarRight">

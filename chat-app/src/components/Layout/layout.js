@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, {useState, useContext } from 'react';
 import Header from '../Header';
 import Navbar from '../Navbar';
 import Home from '../Home';
@@ -11,11 +11,11 @@ function Layout() {
 
     const { lightMode } = useContext(LightModeContext);
 
-
+    const [searchResults, setSearchResults] = useState([]);
     return (
         <div className={`wrapper ${lightMode ? 'light' : 'dark'}`}>
             <div className="Header">
-                <Header />
+            <Header setSearchResults={setSearchResults} />
             </div>
             <div className="Container">
                 <div className="Navbar">
@@ -23,7 +23,7 @@ function Layout() {
                 </div>
                 <div className="Home">
                     <Upload />
-                    <Home />
+                    <Home searchResults={searchResults} />
                 </div>
                 <div className="Contact">
                     <Contact />
