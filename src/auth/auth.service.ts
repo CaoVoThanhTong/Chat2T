@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { UserService } from './../user/user.service';
-import { LoginUserDto } from './dto/auth.dto';
+import { LoginUserDto, UserGoogleDto } from './dto/auth.dto';
 import { PrismaService } from './../prisma/prisma.service';
 import {
   ForbiddenException,
@@ -199,5 +199,23 @@ export class AuthService {
       console.log(payload.sub);
       return this.userService.getUserById(payload.sub);
     }
+  }
+
+  async validateUser(userDto: UserGoogleDto) {
+    console.log(userDto);
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        email: userDto.email,
+      },
+    });
+    if (user) return user;
+    const newUser = await this.prismaService.user.create({
+      data: {
+        ...userDto,
+        hashPassword: '',
+        isVerify: true,
+      },
+    });
+    return newUser;
   }
 }

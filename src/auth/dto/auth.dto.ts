@@ -35,3 +35,15 @@ export class LoginUserDto {
   @IsNotEmpty()
   hashPassword: string;
 }
+
+export class UserGoogleDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  userName: string;
+  @IsString()
+  avatar: string;
+}

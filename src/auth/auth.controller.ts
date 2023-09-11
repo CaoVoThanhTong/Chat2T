@@ -1,4 +1,5 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthUserDto, LoginUserDto } from './dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -6,6 +7,7 @@ import { GetUser } from './decorator';
 import { User } from '@prisma/client';
 import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
+import { GoogleAuthGuard } from './guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -16,6 +18,17 @@ export class AuthController {
     return await this.authService.register(body);
   }
 
+  @Get('google/login')
+  @UseGuards(GoogleAuthGuard)
+  handleLogin() {
+    return { msg: 'Google login' };
+  }
+
+  @Get('google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  handleRedirect() {
+    return { msg: 'Google redirect' };
+  }
   @Post('login')
   async login(@Body() body: LoginUserDto) {
     return await this.authService.login(body);
